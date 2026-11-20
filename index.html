@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CYBER SECURITY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #020504;
+      background-image: radial-gradient(circle at 50% 45%, #071913 0%, #020605 70%, #000000 100%);
+      font-family: 'Montserrat', sans-serif;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+
+    .poster-frame {
+      position: relative;
+      width: 100%;
+      max-width: 450px;
+      aspect-ratio: 3 / 4.35;
+      background: #040b09;
+      border: 2px solid #26e87e;
+      box-shadow:
+        0 0 15px rgba(38, 232, 126, 0.45),
+        0 0 40px rgba(16, 130, 70, 0.25),
+        inset 0 0 35px rgba(10, 55, 38, 0.65);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 22px 24px;
+      overflow: hidden;
+    }
+
+    .smoke-layer {
+      position: absolute;
+      inset: -20%;
+      background:
+        radial-gradient(circle at 20% 25%, rgba(20, 110, 95, 0.24) 0%, transparent 45%),
+        radial-gradient(circle at 82% 30%, rgba(18, 95, 85, 0.22) 0%, transparent 48%),
+        radial-gradient(circle at 50% 78%, rgba(22, 145, 88, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 15% 85%, rgba(14, 80, 72, 0.22) 0%, transparent 42%);
+      filter: blur(22px);
+      animation: driftSmoke 14s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes driftSmoke {
+      0% { transform: translate(-2%, -1%) scale(1); }
+      100% { transform: translate(2%, 2%) scale(1.06); }
+    }
+
+    #fxCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Screen Management */
+    .screen-view {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .screen-view.hidden {
+      display: none;
+      opacity: 0;
+      transform: scale(0.97);
+    }
+
+    /* ==================== FIRST SCREEN STYLES ==================== */
+    .title-block {
+      text-align: center;
+      user-select: none;
+      margin-top: 8px;
+    }
+
+    .title-block h1 {
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #2ef589;
+      line-height: 1.06;
+      letter-spacing: 1.5px;
+      text-shadow:
+        0 0 8px rgba(46, 245, 137, 0.65),
+        0 0 22px rgba(34, 211, 115, 0.35),
+        0 2px 4px rgba(0, 0, 0, 0.9);
+    }
+
+    .title-top {
+      display: block;
+      font-size: clamp(2.45rem, 8.6vw, 3.3rem);
+    }
+
+    .title-bottom {
+      display: block;
+      font-size: clamp(2.1rem, 7.4vw, 2.85rem);
+    }
+
+    .emblem-stage {
+      position: relative;
+      width: 225px;
+      height: 225px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: auto 0;
+    }
+
+    .emblem-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      filter:
+        drop-shadow(0 0 12px rgba(235, 45, 18, 0.7))
+        drop-shadow(0 6px 14px rgba(0, 0, 0, 0.85));
+    }
+
+    .emblem-reflection {
+      position: absolute;
+      bottom: -46px;
+      width: 160px;
+      height: 110px;
+      opacity: 0.24;
+      transform: scaleY(-0.65);
+      filter: blur(3px);
+      pointer-events: none;
+      mask-image: linear-gradient(to top, rgba(0,0,0,0.85), transparent 80%);
+      -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.85), transparent 80%);
+    }
+
+    .btn-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      margin-bottom: 10px;
+    }
+
+    .btn-aura {
+      position: absolute;
+      inset: -6px;
+      background: linear-gradient(90deg, #16c968, #3cff98, #16c968);
+      filter: blur(12px);
+      opacity: 0.65;
+      border-radius: 4px;
+      animation: auraPulse 2.4s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes auraPulse {
+      0% { opacity: 0.48; transform: scale(0.99); }
+      100% { opacity: 0.82; transform: scale(1.015); }
+    }
+
+    .view-button {
+      position: relative;
+      width: 100%;
+      padding: 15px 20px;
+      background: linear-gradient(180deg, rgba(16, 78, 49, 0.92) 0%, rgba(9, 48, 30, 0.96) 100%);
+      border: 2px solid #35fa90;
+      color: #06140d;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: 7px;
+      text-indent: 7px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-shadow:
+        0 0 6px rgba(64, 255, 152, 0.9),
+        0 0 14px rgba(46, 245, 137, 0.6);
+      box-shadow:
+        inset 0 0 16px rgba(53, 250, 144, 0.45),
+        0 0 18px rgba(46, 245, 137, 0.55);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .view-button:hover {
+      background: linear-gradient(180deg, rgba(28, 128, 80, 0.95) 0%, rgba(14, 76, 47, 0.98) 100%);
+      box-shadow:
+        inset 0 0 22px rgba(110, 255, 178, 0.65),
+        0 0 28px rgba(53, 250, 144, 0.85);
+      transform: translateY(-2px);
+    }
+
+    /* ==================== SECOND MENU SCREEN STYLES ==================== */
+    .terminal-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.95rem;
+      color: #6ce8a5;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(46, 245, 137, 0.18);
+      letter-spacing: 0.5px;
+    }
+
+    .online-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #2ef589;
+      font-weight: bold;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #2ef589;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #2ef589, 0 0 14px #2ef589;
+      animation: blinkDot 1.5s infinite alternate;
+    }
+
+    @keyframes blinkDot {
+      0% { opacity: 0.55; }
+      100% { opacity: 1; }
+    }
+
+    .menu-title-block {
+      text-align: center;
+      margin-top: 6px;
+      user-select: none;
+    }
+
+    .menu-title-block h2 {
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #2ef589;
+      line-height: 1.05;
+      letter-spacing: 4px;
+      text-shadow:
+        0 0 10px rgba(46, 245, 137, 0.75),
+        0 0 24px rgba(34, 211, 115, 0.4);
+    }
+
+    .menu-title-top {
+      display: block;
+      font-size: clamp(2.1rem, 7.5vw, 2.7rem);
+    }
+
+    .menu-title-bottom {
+      display: block;
+      font-size: clamp(2.1rem, 7.5vw, 2.7rem);
+    }
+
+    .cyber-eye-stage {
+      width: 210px;
+      height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 4px 0;
+    }
+
+    .cyber-eye-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 8px rgba(46, 245, 137, 0.75));
+    }
+
+    .menu-buttons-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .menu-btn {
+      width: 100%;
+      padding: 15px 16px;
+      background: linear-gradient(180deg, rgba(11, 46, 30, 0.85) 0%, rgba(6, 28, 18, 0.92) 100%);
+      border: 1.5px solid #2ef589;
+      color: #2ef589;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.25rem;
+      letter-spacing: 3.5px;
+      text-indent: 3.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow:
+        inset 0 0 14px rgba(46, 245, 137, 0.25),
+        0 0 12px rgba(46, 245, 137, 0.22);
+      text-shadow: 0 0 8px rgba(46, 245, 137, 0.65);
+      transition: all 0.2s ease;
+    }
+
+    .menu-btn:hover {
+      background: linear-gradient(180deg, rgba(24, 96, 62, 0.92) 0%, rgba(12, 56, 36, 0.96) 100%);
+      box-shadow:
+        inset 0 0 20px rgba(46, 245, 137, 0.5),
+        0 0 20px rgba(46, 245, 137, 0.55);
+      color: #b7ffda;
+      transform: translateY(-2px);
+    }
+
+    .menu-btn:active {
+      transform: translateY(0);
+    }
+
+    .back-link {
+      background: transparent;
+      border: none;
+      color: #4eb881;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.82rem;
+      letter-spacing: 2px;
+      cursor: pointer;
+      margin-top: 4px;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .back-link:hover {
+      opacity: 1;
+      text-shadow: 0 0 6px #2ef589;
+    }
+
+    /* Action Info Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(1, 6, 4, 0.88);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 20;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 360px;
+      background: #06130f;
+      border: 1.5px solid #2ef589;
+      box-shadow: 0 0 30px rgba(46, 245, 137, 0.3);
+      padding: 24px;
+      text-align: center;
+      color: #b7ffda;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .modal-box h3 {
+      color: #2ef589;
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    .modal-box p {
+      font-size: 0.92rem;
+      line-height: 1.5;
+      color: #8ad6b0;
+      margin-bottom: 18px;
+    }
+
+    .close-btn {
+      padding: 8px 22px;
+      background: #146b42;
+      border: 1px solid #2ef589;
+      color: #e6fff2;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.95rem;
+      cursor: pointer;
+      letter-spacing: 2px;
+    }
+
+    .close-btn:hover {
+      background: #1f995f;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="poster-frame">
+    <div class="smoke-layer"></div>
+    <canvas id="fxCanvas"></canvas>
+
+    <!-- ==================== INTERFACE 1: HOME / SPLASH ==================== -->
+    <div class="screen-view" id="homeScreen">
+      <div class="title-block">
+        <h1>
+          <span class="title-top">CYBER</span>
+          <span class="title-bottom">SECURITY</span>
+        </h1>
+      </div>
+
+      <div class="emblem-stage">
+        <svg width="0" height="0" style="position:absolute;">
+          <defs>
+            <filter id="grungeSplash" x="-20%" y="-20%" width="140%" height="140%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.065" numOctaves="4" seed="12" result="noise" />
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="9" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+              <feGaussianBlur in="displaced" stdDeviation="0.4" result="soft" />
+              <feMerge>
+                <feMergeNode in="soft" />
+              </feMerge>
+            </filter>
+
+            <linearGradient id="crimsonFire" x1="15%" y1="10%" x2="85%" y2="90%">
+              <stop offset="0%" stop-color="#c92412" />
+              <stop offset="55%" stop-color="#e33519" />
+              <stop offset="85%" stop-color="#ff5e1a" />
+              <stop offset="100%" stop-color="#ff9d2e" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <svg class="emblem-svg" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+          <g filter="url(#grungeSplash)" stroke="url(#crimsonFire)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="120" cy="116" r="76" stroke-width="11.5" />
+            <path d="M74 166 L116 44 L154 168" stroke-width="11" />
+            <path d="M117 42 L114 190" stroke-width="10.5" />
+            <path d="M64 134 L176 96" stroke-width="10" />
+            <path d="M84 176 L156 112" stroke-width="8.5" />
+          </g>
+
+          <g fill="#d62b15" opacity="0.92">
+            <path d="M78 180 L78 202" stroke="#d62b15" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M92 186 L92 212" stroke="#d62b15" stroke-width="3" stroke-linecap="round" />
+            <path d="M136 188 L136 205" stroke="#d62b15" stroke-width="2.2" stroke-linecap="round" />
+            <circle cx="56" cy="64" r="2.2" />
+            <circle cx="182" cy="58" r="2.5" />
+            <circle cx="195" cy="92" r="1.8" />
+            <circle cx="46" cy="142" r="2" />
+            <circle cx="172" cy="166" r="3" />
+          </g>
+
+          <circle cx="164" cy="164" r="14" fill="#ff7b1c" opacity="0.45" filter="blur(7px)" />
+          <circle cx="166" cy="162" r="6" fill="#ffd269" opacity="0.8" filter="blur(3px)" />
+        </svg>
+
+        <svg class="emblem-reflection" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#b82312" fill="none" stroke-width="11" stroke-linecap="round">
+            <circle cx="120" cy="116" r="76" />
+            <path d="M74 166 L116 44 L154 168" />
+            <path d="M117 42 L114 190" />
+            <path d="M64 134 L176 96" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="btn-wrap">
+        <div class="btn-aura"></div>
+        <button class="view-button" id="viewBtn" type="button">VIEW</button>
+      </div>
+    </div>
+
+    <!-- ==================== INTERFACE 2: ./menu.sh ==================== -->
+    <div class="screen-view hidden" id="menuScreen">
+      <div class="terminal-header">
+        <span>sys@cyber:~$ ./menu.sh</span>
+        <span class="online-status"><span class="status-dot"></span> ONLINE</span>
+      </div>
+
+      <div class="menu-title-block">
+        <h2>
+          <span class="menu-title-top">CYBER</span>
+          <span class="menu-title-bottom">SECURITY</span>
+        </h2>
+      </div>
+
+      <!-- Cyber Eye with Padlock SVG -->
+      <div class="cyber-eye-stage">
+        <svg class="cyber-eye-svg" viewBox="0 0 220 90" xmlns="http://www.w3.org/2000/svg">
+          <!-- Outer Eye Shape -->
+          <path d="M14 45 Q110 4 206 45 Q110 86 14 45 Z" fill="rgba(16, 78, 49, 0.25)" stroke="#2ef589" stroke-width="2.5" stroke-linejoin="round" />
+          <!-- Inner Iris Ring -->
+          <circle cx="110" cy="45" r="24" fill="#04120c" stroke="#2ef589" stroke-width="2.2" />
+          <circle cx="110" cy="45" r="19" fill="none" stroke="#2ef589" stroke-width="1" stroke-dasharray="4 3" />
+          <!-- Padlock Shackle -->
+          <path d="M101 38 V29 A9 9 0 0 1 119 29 V38" fill="none" stroke="#2ef589" stroke-width="2.6" stroke-linecap="round" />
+          <!-- Padlock Body -->
+          <rect x="97" y="38" width="26" height="20" rx="3" fill="#2ef589" />
+          <!-- Keyhole -->
+          <circle cx="110" cy="46" r="2.5" fill="#04120c" />
+          <path d="M108.5 47 L107.8 53 H112.2 L111.5 47 Z" fill="#04120c" />
+        </svg>
+      </div>
+
+      <!-- Menu Action Buttons -->
+      <div class="menu-buttons-list">
+        <button class="menu-btn" type="button" data-action="apk">DOWNLOAD APK</button>
+        <button class="menu-btn" type="button" data-action="service">SERVICE REQUEST</button>
+        <button class="menu-btn" type="button" data-action="contact">CONTACT US</button>
+      </div>
+
+      <button class="back-link" id="backBtn" type="button">[ &lt; EXIT MENU ]</button>
+    </div>
+  </main>
+
+  <!-- Action Popup Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <h3 id="modalTitle">SYSTEM NOTICE</h3>
+      <p id="modalDesc">Processing request...</p>
+      <button class="close-btn" id="closeModal" type="button">CLOSE</button>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('fxCanvas');
+    const ctx = canvas.getContext('2d');
+    let currentScreen = 'home'; // 'home' or 'menu'
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+      initMatrixGrid(rect.width, rect.height);
+    }
+
+    // Matrix/Hex grid for Screen 2
+    let matrixCells = [];
+    const hexChars = "0123456789ABCDEF";
+    function initMatrixGrid(w, h) {
+      matrixCells = [];
+      const cols = Math.floor(w / 18);
+      const rows = Math.floor(h / 20);
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          matrixCells.push({
+            x: c * 18 + 9,
+            y: r * 20 + 14,
+            char: hexChars[Math.floor(Math.random() * hexChars.length)],
+            alpha: Math.random() * 0.14
+          });
+        }
+      }
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawCircuits(w, h) {
+      const cx = w / 2;
+      const cy = h * 0.52;
+
+      ctx.save();
+      ctx.strokeStyle = 'rgba(42, 165, 130, 0.24)';
+      ctx.lineWidth = 1.2;
+
+      const traces = [
+        [[cx - 60, cy - 35], [cx - 115, cy - 35], [cx - 135, cy - 55], [cx - 175, cy - 55]],
+        [[cx - 70, cy - 12], [cx - 130, cy - 12], [cx - 148, cy - 28], [cx - 185, cy - 28]],
+        [[cx - 75, cy + 12], [cx - 140, cy + 12], [cx - 160, cy + 30], [cx - 190, cy + 30]],
+        [[cx - 65, cy + 35], [cx - 110, cy + 35], [cx - 128, cy + 52], [cx - 168, cy + 52]],
+        [[cx + 60, cy - 38], [cx + 118, cy - 38], [cx + 138, cy - 56], [cx + 178, cy - 56]],
+        [[cx + 72, cy - 14], [cx + 134, cy - 14], [cx + 152, cy - 30], [cx + 188, cy - 30]],
+        [[cx + 75, cy + 10], [cx + 138, cy + 10], [cx + 158, cy + 28], [cx + 190, cy + 28]],
+        [[cx + 65, cy + 34], [cx + 114, cy + 34], [cx + 132, cy + 50], [cx + 170, cy + 50]]
+      ];
+
+      traces.forEach(path => {
+        ctx.beginPath();
+        ctx.moveTo(path[0][0], path[0][1]);
+        for (let i = 1; i < path.length; i++) {
+          ctx.lineTo(path[i][0], path[i][1]);
+        }
+        ctx.stroke();
+
+        const end = path[path.length - 1];
+        ctx.beginPath();
+        ctx.arc(end[0], end[1], 2.6, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      ctx.restore();
+    }
+
+    function drawMatrixBackground() {
+      ctx.save();
+      ctx.font = "12px 'Share Tech Mono', monospace";
+      ctx.textAlign = "center";
+      for (let i = 0; i < matrixCells.length; i++) {
+        const cell = matrixCells[i];
+        if (Math.random() < 0.015) {
+          cell.char = hexChars[Math.floor(Math.random() * hexChars.length)];
+          cell.alpha = 0.04 + Math.random() * 0.16;
+        }
+        ctx.fillStyle = `rgba(46, 245, 137, ${cell.alpha})`;
+        ctx.fillText(cell.char, cell.x, cell.y);
+      }
+      ctx.restore();
+    }
+
+    const sparks = Array.from({ length: 34 }, () => createSpark(true));
+
+    function createSpark(initial = false) {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const cx = rect.width * 0.56;
+      const cy = rect.height * 0.58;
+      return {
+        x: cx + (Math.random() - 0.5) * 140,
+        y: initial ? cy + (Math.random() - 0.5) * 140 : cy + 35 + Math.random() * 25,
+        vx: (Math.random() - 0.35) * 0.65,
+        vy: -0.35 - Math.random() * 0.85,
+        size: 1 + Math.random() * 2.4,
+        alpha: 0.4 + Math.random() * 0.6
+      };
+    }
+
+    function animate() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      if (currentScreen === 'home') {
+        drawCircuits(rect.width, rect.height);
+
+        sparks.forEach((s, idx) => {
+          s.x += s.vx;
+          s.y += s.vy;
+          s.alpha -= 0.0045;
+
+          if (s.alpha <= 0 || s.y < rect.height * 0.25) {
+            sparks[idx] = createSpark(false);
+            return;
+          }
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(255, ${120 + Math.floor(Math.random() * 90)}, 30, ${s.alpha})`;
+          ctx.shadowColor = '#ff6a00';
+          ctx.shadowBlur = 8;
+          ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+      } else {
+        drawMatrixBackground();
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Screen Switching Logic
+    const homeScreen = document.getElementById('homeScreen');
+    const menuScreen = document.getElementById('menuScreen');
+    const viewBtn = document.getElementById('viewBtn');
+    const backBtn = document.getElementById('backBtn');
+
+    viewBtn.addEventListener('click', () => {
+      currentScreen = 'menu';
+      homeScreen.classList.add('hidden');
+      menuScreen.classList.remove('hidden');
+    });
+
+    backBtn.addEventListener('click', () => {
+      currentScreen = 'home';
+      menuScreen.classList.add('hidden');
+      homeScreen.classList.remove('hidden');
+    });
+
+    // Menu Buttons Interaction
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const closeModal = document.getElementById('closeModal');
+
+    const actionDetails = {
+      apk: {
+        title: 'DOWNLOAD APK',
+        desc: 'Preparing secure package: CyberSecurity_v2.4.apk (Encrypted Channel)...'
+      },
+      service: {
+        title: 'SERVICE REQUEST',
+        desc: 'Security Audit & Penetration Testing request portal is ready.'
+      },
+      contact: {
+        title: 'CONTACT US',
+        desc: 'Encrypted Comm Channel: support@cybersec.local | Telegram: @CyberSecOps'
+      }
+    };
+
+    document.querySelectorAll('.menu-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-action');
+        if (actionDetails[key]) {
+          modalTitle.textContent = actionDetails[key].title;
+          modalDesc.textContent = actionDetails[key].desc;
+          modalOverlay.classList.add('active');
+        }
+      });
+    });
+
+    closeModal.addEventListener('click', () => {
+      modalOverlay.classList.remove('active');
+    });
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+  </html>
